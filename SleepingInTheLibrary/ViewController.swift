@@ -41,20 +41,26 @@ class ViewController: UIViewController {
     // MARK: Make Network Request
     
     private func getImageFromFlickr() {
-        let urlParameters = [
+        let methodParameters = [
             Constants.FlickrParameterKeys.Method:Constants.FlickrParameterValues.GalleryPhotosMethod,
             Constants.FlickrParameterKeys.GalleryID:Constants.FlickrParameterValues.GalleryID,
             Constants.FlickrParameterKeys.Extras:Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.Format:Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.NoJSONCallback:Constants.FlickrParameterValues.DisableJSONCallback]
         
-        let urlGetGalleryPhotosParams = escapedParameters(urlParameters)
-        let urlGetGalleryPhotos = "\(Constants.Flickr.APIBaseURL)" + urlGetGalleryPhotosParams
+        
+        let urlString = Constants.Flickr.APIBaseURL + escapedParameters(methodParameters)
         
         // TODO: Write the network code here!
-        let url = NSURL(string: urlGetGalleryPhotos)
+        let url = NSURL(string: urlString)!
         
-        print("url:" + url!.absoluteString)
+        // I'm not going to make a request using a NSURL instead use a NSURLRequest 
+        // NSURLRequest wrapps a NSURL, this allow us to have access to more request options 
+        let request = NSURLRequest(URL: url)
+        // request.HTTPMethod: type of the request being made - get(default), post, etc 
+        // is inmutable, so if we need to change it, better use NSMutableURLRequest
+
+
         //after retrieve the image
         setUIEnabled(true)
     }
