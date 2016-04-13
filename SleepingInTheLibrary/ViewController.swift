@@ -41,6 +41,18 @@ class ViewController: UIViewController {
     // MARK: Make Network Request
     
     private func getImageFromFlickr() {
+        let urlGetGalleryPhotos = "\(Constants.Flickr.APIBaseURL)?" +
+            "\(Constants.FlickrParameterKeys.Method)=\(Constants.FlickrParameterValues.GalleryPhotosMethod)&" +
+            "\(Constants.FlickrParameterKeys.GalleryID)=\(Constants.FlickrParameterValues.GalleryID)&" +
+            "\(Constants.FlickrParameterKeys.Extras)=\(Constants.FlickrParameterValues.MediumURL)&" +
+            "\(Constants.FlickrParameterKeys.Format)=\(Constants.FlickrParameterValues.ResponseFormat)&" +
+            "\(Constants.FlickrParameterKeys.NoJSONCallback)=\(Constants.FlickrParameterValues.DisableJSONCallback)"
         
+        // TODO: Write the network code here!
+        let url = NSURL(string: urlGetGalleryPhotos)
+        
+        print("url:" + url!.absoluteString)
+        //after retrieve the image
+        setUIEnabled(true)
     }
 }
