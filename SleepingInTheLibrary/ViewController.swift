@@ -47,8 +47,7 @@ class ViewController: UIViewController {
             Constants.FlickrParameterKeys.Extras:Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.Format:Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.NoJSONCallback:Constants.FlickrParameterValues.DisableJSONCallback]
-        
-        
+
         let urlString = Constants.Flickr.APIBaseURL + escapedParameters(methodParameters)
         
         // TODO: Write the network code here!
@@ -59,8 +58,14 @@ class ViewController: UIViewController {
         let request = NSURLRequest(URL: url)
         // request.HTTPMethod: type of the request being made - get(default), post, etc 
         // is inmutable, so if we need to change it, better use NSMutableURLRequest
-
-
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            (data, response, error) in 
+            if error == nil {
+                print("response: \(response)")
+                print("data: \(data)")
+            }
+        }
+        task.resume()
         //after retrieve the image
         setUIEnabled(true)
     }
