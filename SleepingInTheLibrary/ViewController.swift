@@ -62,10 +62,17 @@ class ViewController: UIViewController {
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
             (data, response, error) in 
             if error == nil {
-                // convert data to JSON
+                // deserialize - (convert a stream of bytes into an object)
+                // from data to JSON representation
                 if let data = data {
                     let parsedResult: AnyObject!
-                    parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                    do {
+                        parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                    } catch {
+//                        displayError("")
+                        return
+                    }
+                    print(parsedResult)
                 }
             }
         }
