@@ -77,7 +77,7 @@ class ViewController: UIViewController {
                     }
                     if let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject] {
                        print(photosDictionary)
-                        if let photoArray = photosDictionary["photo"] {
+                        if let photoArray = photosDictionary["photo"] as? [[String:AnyObject]]{
                             print(photoArray[0])
                         }
                     }
