@@ -75,15 +75,14 @@ class ViewController: UIViewController {
                         print("Could not parse the data as JSON: '\(data)")
                         return
                     }
-                    if let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject] {
-                       print(photosDictionary)
-                        if let photoArray = photosDictionary["photo"] as? [[String:AnyObject]]{
-                            print(photoArray[0])
-                        }
+                    if let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject],
+                        let photoArray = photosDictionary["photo"] as? [[String:AnyObject]] {
+                        print(photoArray[0])
                     }
                 }
             }
         }
+        
         task.resume()
         //after retrieve the image
         setUIEnabled(true)
