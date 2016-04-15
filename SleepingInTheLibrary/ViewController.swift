@@ -82,18 +82,21 @@ class ViewController: UIViewController {
                         
                             if let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String,
                                let photoTitle = photoDictionary[Constants.FlickrParameterKeys.Title] as? String {
-                                    print("title: \(photoTitle)" )
-                                    print("imageURL: \(imageUrlString)")
+                                    let imageURL = NSURL(string: imageUrlString)
+                                    //here is safe to unwrap imageURL with (!)
+                                    if let imageData = NSData(contentsOfURL: imageURL!) {
+                                        performUIUpdatesOnMain({ () -> Void in
+                                            self.photoImageView.image = UIImage(data: imageData)
+                                            self.photoTitleLabel.text = photoTitle
+                                            self.setUIEnabled(true)
+                                        })
+                                    }
                             }
-
                     }
                 }
             }
-        }
-        
+        }        
         task.resume()
-        //after retrieve the image
-        setUIEnabled(true)
     }
     
     /// Takes a dictionary
