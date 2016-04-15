@@ -27,14 +27,15 @@ struct Constants {
         static let MediumURL = "url_m"
         static let Title = "title"
     }
-    
+    // Forced perspectives - "66911286-72157647263150569"
+    // SITL "5704-72157622566655097"
     // MARK: Flickr Parameter Values
     struct FlickrParameterValues {
         static let APIKey = "cc652c035f0a711909a9ba21733bb94c"
         static let ResponseFormat = "json"
         static let DisableJSONCallback = "1" /* 1 means "yes" */
         static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
-        static let GalleryID = "5704-72157622566655097"
+        static let GalleryID = "66911286-72157647263150569"
         static let MediumURL = "url_m"
     }
     

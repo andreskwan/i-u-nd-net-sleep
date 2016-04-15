@@ -60,7 +60,15 @@ class ViewController: UIViewController {
         // request.HTTPMethod: type of the request being made - get(default), post, etc 
         // is inmutable, so if we need to change it, better use NSMutableURLRequest
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-            (data, response, error) in 
+            (data, response, error) in
+            
+            func displayError(error: String) {
+                print(error)
+                print("URL at time of error: \(url)")
+                performUIUpdatesOnMain({ () -> Void in
+                    self.setUIEnabled(true)
+                })
+            }
             if error == nil {
                 // NSJSONSerialization
                 // serialize - conver an object into a stream of bytes
@@ -71,8 +79,7 @@ class ViewController: UIViewController {
                     do {
                         parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
                     } catch {
-//                        displayError("")
-                        print("Could not parse the data as JSON: '\(data)")
+                        displayError("")
                         return
                     }
                     if let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject],
@@ -95,7 +102,7 @@ class ViewController: UIViewController {
                     }
                 }
             }
-        }        
+        }
         task.resume()
     }
     
