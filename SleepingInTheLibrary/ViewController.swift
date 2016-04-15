@@ -79,8 +79,11 @@ class ViewController: UIViewController {
                        let photoArray = photosDictionary["photo"] as? [[String:AnyObject]] {
                             let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
                             let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
-                            if let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String {
-                                
+                        
+                            if let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String,
+                               let photoTitle = photoDictionary[Constants.FlickrParameterKeys.Title] as? String {
+                                    print("title: \(photoTitle)" )
+                                    print("imageURL: \(imageUrlString)")
                             }
 
                     }
