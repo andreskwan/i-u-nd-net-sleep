@@ -127,16 +127,15 @@ class ViewController: UIViewController {
                 return
             }
             
-            guard let photoTitle = photoDictionary[Constants.FlickrParameterKeys.Title] as? String else {
-                displayError("")
-                return
-            }
+            // No need of returning from this error, instead add a title
+            let photoTitle = photoDictionary[Constants.FlickrResponseKeys.Title] as? String ?? "No title"
             
             let imageURL = NSURL(string: imageUrlString)
             
             //here is safe to unwrap imageURL with (!)
+            /* GUARD: Do we have a valid imageData? */
             guard let imageData = NSData(contentsOfURL: imageURL!) else {
-                displayError("")
+                displayError("Error: Can not retireve image data from the url: \(imageURL)")
                 return
             }
             
