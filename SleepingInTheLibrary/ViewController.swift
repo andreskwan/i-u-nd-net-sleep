@@ -69,39 +69,61 @@ class ViewController: UIViewController {
                     self.setUIEnabled(true)
                 })
             }
-            if error == nil {
-                // NSJSONSerialization
-                // serialize - conver an object into a stream of bytes
-                // deserialize - (convert a stream of bytes into an object)
-                // from data to JSON representation
-                if let data = data {
-                    let parsedResult: AnyObject!
-                    do {
-                        parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                    } catch {
-                        displayError("")
-                        return
-                    }
-                    if let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject],
-                       let photoArray = photosDictionary["photo"] as? [[String:AnyObject]] {
-                            let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
-                            let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
-                        
-                            if let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String,
-                               let photoTitle = photoDictionary[Constants.FlickrParameterKeys.Title] as? String {
-                                    let imageURL = NSURL(string: imageUrlString)
-                                    //here is safe to unwrap imageURL with (!)
-                                    if let imageData = NSData(contentsOfURL: imageURL!) {
-                                        performUIUpdatesOnMain({ () -> Void in
-                                            self.photoImageView.image = UIImage(data: imageData)
-                                            self.photoTitleLabel.text = photoTitle
-                                            self.setUIEnabled(true)
-                                        })
-                                    }
-                            }
-                    }
-                }
+            
+            guard let data = data else {
+                displayError("")
+                return
             }
+            
+            // what about the error validation?
+            // if error == nil {
+            
+            // NSJSONSerialization
+            // serialize - conver an object into a stream of bytes
+            // deserialize - (convert a stream of bytes into an object)
+            // from data to JSON representation
+            
+            let parsedResult: AnyObject!
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                displayError("")
+                return
+            }
+            guard let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject] else {
+                displayError("")
+                return
+            }
+            guard let photoArray = photosDictionary["photo"] as? [[String:AnyObject]] else {
+                displayError("")
+                return
+            }
+
+            let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
+            let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
+            
+            guard let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String else {
+                displayError("")
+                return
+            }
+            
+            guard let photoTitle = photoDictionary[Constants.FlickrParameterKeys.Title] as? String else {
+                displayError("")
+                return
+            }
+            
+            let imageURL = NSURL(string: imageUrlString)
+            //here is safe to unwrap imageURL with (!)
+            guard let imageData = NSData(contentsOfURL: imageURL!) else {
+                displayError("")
+                return
+            }
+            
+            performUIUpdatesOnMain({ () -> Void in
+                self.photoImageView.image = UIImage(data: imageData)
+                self.photoTitleLabel.text = photoTitle
+                self.setUIEnabled(true)
+            })
         }
         task.resume()
     }
