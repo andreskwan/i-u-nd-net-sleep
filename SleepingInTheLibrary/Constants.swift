@@ -23,11 +23,6 @@ struct Constants {
         static let Extras = "extras"
         static let Format = "format"
         static let NoJSONCallback = "nojsoncallback"
-        static let Photos = "photos"
-        static let Photo = "photo"
-        static let MediumURL = "url_m"
-        static let Title = "title"
-        static let Status = "stat"
     }
     // Forced perspectives - "66911286-72157647263150569"
     // SITL "5704-72157622566655097"
@@ -39,7 +34,6 @@ struct Constants {
         static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
         static let GalleryID = "66911286-72157647263150569"
         static let MediumURL = "url_m"
-        static let OKStatus = "ok"
     }
     
     // MARK: Flickr Response Keys
