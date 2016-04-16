@@ -104,7 +104,7 @@ class ViewController: UIViewController {
             }
             
             /* GUARD: Did Flickr return an error (stat != ok) */
-            guard let stat = parsedResult[Constants.FlickrParameterKeys.Status] as? String
+            guard let stat = parsedResult[Constants.FlickrResponseKeys.Status] as? String
                 where stat == Constants.FlickrResponseValues.OKStatus
                 else {
                     displayError("Flickr api returned an error. See error code and message in \(parsedResult)")
@@ -112,9 +112,9 @@ class ViewController: UIViewController {
             }
             
             /* GUARD: Are the "photos" and "photo" keys in our results? */
-            guard let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject],
-                  let photoArray = photosDictionary[Constants.FlickrParameterKeys.Photo] as? [[String:AnyObject]] else {
-                displayError("Cannot find keys '\(Constants.FlickrParameterKeys.Photos)' and '\(Constants.FlickrParameterKeys.Photo)' in \(parsedResult) ")
+            guard let photosDictionary = parsedResult[Constants.FlickrResponseKeys.Photos] as? [String:AnyObject],
+                  let photoArray = photosDictionary[Constants.FlickrResponseKeys.Photo] as? [[String:AnyObject]] else {
+                displayError("Cannot find keys '\(Constants.FlickrResponseKeys.Photos)' and '\(Constants.FlickrResponseKeys.Photo)' in \(parsedResult) ")
                 return
             }
             
@@ -122,8 +122,8 @@ class ViewController: UIViewController {
             let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
             
             /* GUARD: Does our photo have a key for 'url_m'? */
-            guard let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String else {
-                displayError("Error: Can not find key '\(Constants.FlickrParameterKeys.MediumURL)' in \(photoDictionary)")
+            guard let imageUrlString = photoDictionary[Constants.FlickrResponseKeys.MediumURL] as? String else {
+                displayError("Error: Can not find key '\(Constants.FlickrResponseKeys.MediumURL)' in \(photoDictionary)")
                 return
             }
             
