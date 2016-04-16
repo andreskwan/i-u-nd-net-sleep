@@ -64,19 +64,31 @@ class ViewController: UIViewController {
             
             func displayError(error: String) {
                 print(error)
-                print("URL at time of error: \(url)")
+                print("Error: URL at time of error: \(url)")
                 performUIUpdatesOnMain({ () -> Void in
                     self.setUIEnabled(true)
                 })
             }
             
-            guard let data = data else {
-                displayError("")
+            /* GUARD: Was there an error? */
+            guard (error == nil) else {
+                displayError("Error: in your request: \(error)")
                 return
             }
             
-            // what about the error validation?
-            // if error == nil {
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode
+                where statusCode >= 200 && statusCode <= 299
+                else {
+                    displayError("Error: request status code returned other than 2xx!")
+                    return
+            }
+            
+            /* GUARD: Was there any data returned? */
+            guard let data = data else {
+                displayError("Error: No data was returned by the request!")
+                return
+            }
             
             // NSJSONSerialization
             // serialize - conver an object into a stream of bytes
@@ -87,23 +99,31 @@ class ViewController: UIViewController {
             do {
                 parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
             } catch {
-                displayError("")
+                displayError("Error: Could not parase the data as a JSON: \(data)")
                 return
             }
-            guard let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject] else {
-                displayError("")
+            
+            /* GUARD: Did Flickr return an error (stat != ok) */
+            guard let stat = parsedResult[Constants.FlickrParameterKeys.Status] as? String
+                where stat == Constants.FlickrResponseValues.OKStatus
+                else {
+                    displayError("Flickr api returned an error. See error code and message in \(parsedResult)")
+                    return
+            }
+            
+            /* GUARD: Are the "photos" and "photo" keys in our results? */
+            guard let photosDictionary = parsedResult[Constants.FlickrParameterKeys.Photos] as? [String:AnyObject],
+                  let photoArray = photosDictionary[Constants.FlickrParameterKeys.Photo] as? [[String:AnyObject]] else {
+                displayError("Cannot find keys '\(Constants.FlickrParameterKeys.Photos)' and '\(Constants.FlickrParameterKeys.Photo)' in \(parsedResult) ")
                 return
             }
-            guard let photoArray = photosDictionary["photo"] as? [[String:AnyObject]] else {
-                displayError("")
-                return
-            }
-
+            
             let randomPhotoIndex = Int(arc4random_uniform(UInt32(photoArray.count)))
             let photoDictionary = photoArray[randomPhotoIndex] as [String:AnyObject]
             
+            /* GUARD: Does our photo have a key for 'url_m'? */
             guard let imageUrlString = photoDictionary[Constants.FlickrParameterKeys.MediumURL] as? String else {
-                displayError("")
+                displayError("Error: Can not find key '\(Constants.FlickrParameterKeys.MediumURL)' in \(photoDictionary)")
                 return
             }
             
@@ -113,6 +133,7 @@ class ViewController: UIViewController {
             }
             
             let imageURL = NSURL(string: imageUrlString)
+            
             //here is safe to unwrap imageURL with (!)
             guard let imageData = NSData(contentsOfURL: imageURL!) else {
                 displayError("")
